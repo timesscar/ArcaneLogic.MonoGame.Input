@@ -3,3 +3,5 @@
 ################################################################################
 
 /.vs
+/ArcaneLogic.MonoGame.Input/bin
+/ArcaneLogic.MonoGame.Input/obj
