@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.8.1</Version>
+    <Description>Input helpers for the MonoGame framework</Description>
+    <PackageLicenseExpression>MS-PL</PackageLicenseExpression>
+    <PackageReleaseNotes>Initial release with a touch state machine</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
