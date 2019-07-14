@@ -27,15 +27,6 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         private bool fingerDown;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TappedState"/> class.
-        /// </summary>
-        /// <param name="previousState">State of the previous.</param>
-        /// <param name="position">The position.</param>
-        public TappedState()
-        {
-        }
-
-        /// <summary>
         /// Gets the tap location.
         /// </summary>
         public Vector2? TapLocation { get; private set; }

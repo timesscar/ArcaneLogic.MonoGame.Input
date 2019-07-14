@@ -113,7 +113,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         {
             if(!Cache.ContainsKey(desiredType))
             {
-                if(!desiredType.IsAssignableFrom(typeof(TouchStateBase)))
+                if(!desiredType.IsSubclassOf(typeof(TouchStateBase)))
                 {
                     throw new InvalidOperationException($"The requested type must be derived from {nameof(TouchStateBase)}");
                 }
