@@ -18,17 +18,12 @@ namespace ArcaneLogic.MonoGame.Input.Touch
 
     public class RotateAndScaleState : TouchStateBase
     {
-        public RotateAndScaleState(TouchStateBase previousState)
-            : base(previousState)
-        {
-        }
-
         public override bool Update(GameTime gameTime, TouchCollection currentTouch, out TouchStateBase nextState)
         {
             if (currentTouch.Count != 2)
             {
                 TouchStateMachine.SubmitGestureEvent(new RotateAndScaleEventArgs(GestureTiming.Completed, 0, 0));
-                nextState = new CooldownState(this);
+                nextState = new CooldownState();
                 return true;
             }
 
@@ -44,7 +39,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
             {
                 var pos = Vector2.Lerp(currentTouch[0].Position, currentTouch[1].Position, 0);
                 TouchStateMachine.SubmitGestureEvent(new TwoFingeredDragEventArgs(GestureTiming.Started, pos));
-                nextState = new TwoFingeredDragState(this);
+                nextState = new TwoFingeredDragState();
                 return true;
             }
 

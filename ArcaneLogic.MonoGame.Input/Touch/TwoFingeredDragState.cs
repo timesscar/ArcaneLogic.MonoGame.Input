@@ -16,17 +16,12 @@ namespace ArcaneLogic.MonoGame.Input.Touch
 
     public class TwoFingeredDragState : TouchStateBase
     {
-        public TwoFingeredDragState(TouchStateBase previousState)
-            : base(previousState)
-        {
-        }
-
         public override bool Update(GameTime gameTime, TouchCollection currentTouch, out TouchStateBase nextState)
         {
             if (currentTouch.Count != 2)
             {
                 TouchStateMachine.SubmitGestureEvent(new TwoFingeredDragEventArgs(GestureTiming.Completed, new Vector2()));
-                nextState = new CooldownState(this);
+                nextState = new CooldownState();
                 return true;
             }
 
@@ -38,7 +33,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
                         .MovingInSameDirection(Vector2.Normalize(prevFinger2.Position - currentTouch[1].Position)))
                 {
                     TouchStateMachine.SubmitGestureEvent(new TwoFingeredDragEventArgs(GestureTiming.Completed, new Vector2()));
-                    nextState = new RotateAndScaleState(this);
+                    nextState = new RotateAndScaleState();
                     return true;
                 }
             }

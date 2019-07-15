@@ -17,16 +17,11 @@ namespace ArcaneLogic.MonoGame.Input.Touch
 
     public class DragState : TouchStateBase
     {
-        public DragState(TouchStateBase previousState)
-            : base(previousState)
-        {
-        }
-
         public override bool Update(GameTime gameTime, TouchCollection currentTouch, out TouchStateBase nextState)
         {
             if (currentTouch.Count != 1)
             {
-                nextState = new CooldownState(this);
+                nextState = new CooldownState();
                 TouchStateMachine.SubmitGestureEvent(new DragEventArgs(GestureTiming.Completed, new Vector2()));
                 return true;
             }
