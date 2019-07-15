@@ -21,11 +21,6 @@ namespace ArcaneLogic.MonoGame.Input.Touch
     /// <seealso cref="TouchStateBase" />
     public class WaitingState : TouchStateBase
     {
-        public WaitingState(TouchStateBase previousState)
-            : base(previousState)
-        {
-        }
-
         /// <summary>
         /// Updates the current machine state
         /// </summary>
@@ -41,7 +36,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
 
             if (touched)
             {
-                nextState = new TouchedState(this, currentTouch);
+                nextState = new TouchedState(currentTouch);
                 return true;
             }
 

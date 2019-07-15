@@ -23,7 +23,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
 
         public TouchStateMachine()
         {
-            this.CurrentState = new WaitingState(null);
+            this.CurrentState = new WaitingState();
         }
 
         public event EventHandler<TouchEventArgsBase> GestureComplete;

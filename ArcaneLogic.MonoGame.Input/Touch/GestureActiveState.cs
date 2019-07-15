@@ -14,28 +14,23 @@ namespace ArcaneLogic.MonoGame.Input.Touch
     using Microsoft.Xna.Framework.Input.Touch;
 
     public class GestureActiveState : TouchStateBase
-    {
-        public GestureActiveState(TouchStateBase previousState)
-            : base(previousState)
-        {
-        }
-
+    { 
         public override bool Update(GameTime gameTime, TouchCollection currentTouch, out TouchStateBase nextState)
         {
             switch (currentTouch.Count)
             {
                 case 1:
-                    nextState = new DragState(this);
+                    nextState = new DragState();
                     TouchStateMachine.SubmitGestureEvent(new DragEventArgs(GestureTiming.Started, currentTouch[0].Position));
                     return true;
                 case 2:
                     TouchStateMachine.SubmitGestureEvent(new RotateAndScaleEventArgs(GestureTiming.Started, 0, 0));
-                    nextState = new RotateAndScaleState(this);
+                    nextState = new RotateAndScaleState();
 
                     return true;
                 default:
                     // bail because no gesture is active anymore
-                    nextState = new WaitingState(this);
+                    nextState = new WaitingState();
                     return true;
             }
         }

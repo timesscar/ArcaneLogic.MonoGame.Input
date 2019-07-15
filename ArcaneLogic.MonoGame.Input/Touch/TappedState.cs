@@ -30,8 +30,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         /// </summary>
         /// <param name="previousState">State of the previous.</param>
         /// <param name="position">The position.</param>
-        public TappedState(TouchStateBase previousState, Vector2 position)
-            : base(previousState)
+        public TappedState(Vector2 position)
         {
             this.TapLocation = position;
         }
@@ -57,7 +56,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
             if (this.delayTimer > TouchStateMachine.Configuration.TapDelay)
             {
                 TouchStateMachine.SubmitGestureEvent(new TapEventArgs(this.TapLocation, GestureTiming.Completed));
-                nextState = new CooldownState(this);
+                nextState = new CooldownState();
                 return true;
             }
 
@@ -66,7 +65,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
             if (!touched && this.fingerDown)
             {
                 // TODO: detect if taps are far apart and start a new tap
-                nextState = new CooldownState(this);
+                nextState = new CooldownState();
                 TouchStateMachine.SubmitGestureEvent(new DoubleTapEventArgs(this.TapLocation));
                 return true;
             }
