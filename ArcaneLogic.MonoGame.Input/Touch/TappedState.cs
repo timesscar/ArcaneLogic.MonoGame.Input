@@ -10,7 +10,6 @@
 
 namespace ArcaneLogic.MonoGame.Input.Touch
 {
-    using System;
     using System.Linq;
 
     using Microsoft.Xna.Framework;
@@ -27,9 +26,20 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         private bool fingerDown;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TappedState"/> class.
+        /// </summary>
+        /// <param name="previousState">State of the previous.</param>
+        /// <param name="position">The position.</param>
+        public TappedState(TouchStateBase previousState, Vector2 position)
+            : base(previousState)
+        {
+            this.TapLocation = position;
+        }
+
+        /// <summary>
         /// Gets the tap location.
         /// </summary>
-        public Vector2? TapLocation { get; private set; }
+        public Vector2 TapLocation { get; private set; }
 
         /// <summary>
         /// Updates the current machine state
@@ -42,19 +52,12 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         /// </returns>
         public override bool Update(GameTime gameTime, TouchCollection currentTouch, out TouchStateBase nextState)
         {
-            if(this.TapLocation == null)
-            {
-                this.TapLocation = currentTouch[0].Position;
-                nextState = null;
-                return false;
-            }
-
             this.delayTimer += gameTime.ElapsedGameTime.Milliseconds;
 
             if (this.delayTimer > TouchStateMachine.Configuration.TapDelay)
             {
-                TouchStateMachine.SubmitGestureEvent(new TapEventArgs(this.TapLocation.Value, GestureTiming.Completed));
-                nextState = TouchStateMachine.GetTouchState(typeof(CooldownState));
+                TouchStateMachine.SubmitGestureEvent(new TapEventArgs(this.TapLocation, GestureTiming.Completed));
+                nextState = new CooldownState(this);
                 return true;
             }
 
@@ -63,8 +66,8 @@ namespace ArcaneLogic.MonoGame.Input.Touch
             if (!touched && this.fingerDown)
             {
                 // TODO: detect if taps are far apart and start a new tap
-                nextState = TouchStateMachine.GetTouchState(typeof(CooldownState));
-                TouchStateMachine.SubmitGestureEvent(new DoubleTapEventArgs(this.TapLocation.Value));
+                nextState = new CooldownState(this);
+                TouchStateMachine.SubmitGestureEvent(new DoubleTapEventArgs(this.TapLocation));
                 return true;
             }
 
@@ -73,14 +76,6 @@ namespace ArcaneLogic.MonoGame.Input.Touch
 
             nextState = null;
             return false;
-        }
-
-        public override void Reset()
-        {
-            this.delayTimer = 0;
-            this.fingerDown = false;
-
-            this.TapLocation = null;
         }
     }
 }
