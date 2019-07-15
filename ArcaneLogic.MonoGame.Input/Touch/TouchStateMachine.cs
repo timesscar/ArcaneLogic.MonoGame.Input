@@ -21,11 +21,9 @@ namespace ArcaneLogic.MonoGame.Input.Touch
     {
         private static readonly Queue<TouchEventArgsBase> EncounteredGestures = new Queue<TouchEventArgsBase>();
 
-        private static Dictionary<Type, TouchStateBase> Cache { get; } = new Dictionary<Type, TouchStateBase>();
-
         public TouchStateMachine()
         {
-            this.CurrentState = new WaitingState();
+            this.CurrentState = new WaitingState(null);
         }
 
         public event EventHandler<TouchEventArgsBase> GestureComplete;
@@ -34,16 +32,39 @@ namespace ArcaneLogic.MonoGame.Input.Touch
 
         public event EventHandler<TouchEventArgsBase> GestureStarted;
 
-        public static TouchStateConfiguration Configuration { get; set; } = new TouchStateConfiguration();
-
         /// <summary>
         /// Gets a value indicating whether a gesture has been submitted to the base class
         /// </summary>
         public static bool GestureAvailable { get; private set; }
 
+        public static TouchStateConfiguration Configuration { get; set; } = new TouchStateConfiguration();
+
         public TouchStateBase CurrentState { get; private set; }
 
-        public TouchStateBase PreviousState { get; private set; }
+        /// <summary>
+        /// Dequeues an available gesture.
+        /// </summary>
+        /// <returns>The touch event metadata</returns>
+        internal static TouchEventArgsBase DequeueGestureData()
+        {
+            var gesture = EncounteredGestures.Dequeue();
+
+            if (EncounteredGestures.Count == 0)
+                GestureAvailable = false;
+
+            return gesture;
+        }
+
+        /// <summary>
+        /// Submits a gesture event for the state machine to process
+        /// </summary>
+        /// <param name="metadata">The touch event metadata.</param>
+        internal static void SubmitGestureEvent(TouchEventArgsBase metadata)
+        {
+            EncounteredGestures.Enqueue(metadata);
+
+            GestureAvailable = true;
+        }
 
         public void Update(GameTime gameTime)
         {
@@ -53,10 +74,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
                 Debug.WriteLine($"Transitioning to {nextState}.");
 
                 if (nextState != null)
-                {
-                    this.PreviousState = this.CurrentState;
                     this.CurrentState = nextState;
-                }
             }
 
             if (GestureAvailable)
@@ -82,48 +100,6 @@ namespace ArcaneLogic.MonoGame.Input.Touch
                         break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Dequeues an available gesture.
-        /// </summary>
-        /// <returns>The touch event metadata</returns>
-        private static TouchEventArgsBase DequeueGestureData()
-        {
-            var gesture = EncounteredGestures.Dequeue();
-
-            if (EncounteredGestures.Count == 0)
-                GestureAvailable = false;
-
-            return gesture;
-        }
-
-        /// <summary>
-        /// Submits a gesture event for the state machine to process
-        /// </summary>
-        /// <param name="metadata">The touch event metadata.</param>
-        internal static void SubmitGestureEvent(TouchEventArgsBase metadata)
-        {
-            EncounteredGestures.Enqueue(metadata);
-
-            GestureAvailable = true;
-        }
-
-        internal static TouchStateBase GetTouchState(Type desiredType)
-        {
-            if(!Cache.ContainsKey(desiredType))
-            {
-                if(!desiredType.IsSubclassOf(typeof(TouchStateBase)))
-                {
-                    throw new InvalidOperationException($"The requested type must be derived from {nameof(TouchStateBase)}");
-                }
-
-                var temp = Activator.CreateInstance(desiredType) as TouchStateBase;
-
-                Cache.Add(desiredType, temp);
-            }
-
-            return Cache[desiredType];
         }
     }
 }

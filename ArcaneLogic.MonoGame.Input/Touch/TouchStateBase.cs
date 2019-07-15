@@ -21,6 +21,21 @@ namespace ArcaneLogic.MonoGame.Input.Touch
     public abstract class TouchStateBase
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="TouchStateBase"/> class.
+        /// </summary>
+        /// <param name="previousState">The previous state machine state</param>
+        protected TouchStateBase(TouchStateBase previousState)
+        {
+            previousState?.ClearPrevious();
+            this.Previous = previousState;
+        }
+
+        /// <summary>
+        /// Gets the previous state machine state
+        /// </summary>
+        public TouchStateBase Previous { get; private set; }
+
+        /// <summary>
         /// Updates the current machine state
         /// </summary>
         /// <param name="gameTime">The game time.</param>
@@ -30,8 +45,11 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         public abstract bool Update(GameTime gameTime, TouchCollection currentTouch, out TouchStateBase nextState);
 
         /// <summary>
-        /// Resets the instance to its defaults
+        /// Clears the previous touch state
         /// </summary>
-        public virtual void Reset() { }
+        private void ClearPrevious()
+        {
+            this.Previous = null;
+        }
     }
 }

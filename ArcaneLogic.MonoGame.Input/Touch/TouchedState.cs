@@ -21,9 +21,20 @@ namespace ArcaneLogic.MonoGame.Input.Touch
     /// <seealso cref="TouchStateBase" />
     public class TouchedState : TouchStateBase
     {
-        private TouchCollection? previousTouch;
+        private TouchCollection previousTouch;
 
         private float touchedTimer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchedState" /> class.
+        /// </summary>
+        /// <param name="previousState">State of the previous.</param>
+        /// <param name="previousTouch">The previous touch.</param>
+        public TouchedState(TouchStateBase previousState, TouchCollection previousTouch)
+            : base(previousState)
+        {
+            this.previousTouch = previousTouch;
+        }
 
         /// <summary>
         /// Updates the current machine state
@@ -36,18 +47,11 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         /// </returns>
         public override bool Update(GameTime gameTime, TouchCollection currentTouch, out TouchStateBase nextState)
         {
-            if(this.previousTouch == null)
-            {
-                this.previousTouch = currentTouch;
-                nextState = null;
-                return false;
-            }
-
             this.touchedTimer += gameTime.ElapsedGameTime.Milliseconds;
 
             if (this.touchedTimer > TouchStateMachine.Configuration.TouchDelay || currentTouch.Count > 1)
             {
-                nextState = new GestureActiveState();
+                nextState = new GestureActiveState(this);
                 return true;
             }
 
@@ -55,7 +59,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
             {
                 if (currentTouch.Count == 1)
                 {
-                    var prevFirst = this.previousTouch.Value[0].Position;
+                    var prevFirst = this.previousTouch[0].Position;
                     var currFirst = currentTouch[0].Position;
 
                     var direction = Vector2.Normalize(currFirst - prevFirst);
@@ -64,7 +68,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
                     if (distance > TouchStateMachine.Configuration.FlickDistance)
                     {
                         TouchStateMachine.SubmitGestureEvent(new FlickEventArgs(prevFirst, direction, distance));
-                        nextState = new CooldownState();
+                        nextState = new CooldownState(this);
                         return true;
                     }
                 }
@@ -74,14 +78,9 @@ namespace ArcaneLogic.MonoGame.Input.Touch
                 return false;
             }
 
-            TouchStateMachine.SubmitGestureEvent(new TapEventArgs(this.previousTouch.Value[0].Position, GestureTiming.Started));
-            nextState = TouchStateMachine.GetTouchState(typeof(TappedState));
+            TouchStateMachine.SubmitGestureEvent(new TapEventArgs(this.previousTouch[0].Position, GestureTiming.Started));
+            nextState = new TappedState(this, this.previousTouch[0].Position);
             return true;
-        }
-
-        public override void Reset()
-        {
-            this.previousTouch = null;
         }
     }
 }

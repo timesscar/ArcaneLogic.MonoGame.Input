@@ -22,6 +22,15 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         private float cooldown;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="CooldownState"/> class.
+        /// </summary>
+        /// <param name="previousState">The previous state machine state</param>
+        public CooldownState(TouchStateBase previousState)
+            : base(previousState)
+        {
+        }
+
+        /// <summary>
         /// Updates the specified game time.
         /// </summary>
         /// <param name="gameTime">The game time.</param>
@@ -32,7 +41,7 @@ namespace ArcaneLogic.MonoGame.Input.Touch
         {
             if (this.cooldown > TouchStateMachine.Configuration.CooldownTime)
             {
-                nextState = new WaitingState();
+                nextState = new WaitingState(this);
                 return true;
             }
 
@@ -40,11 +49,6 @@ namespace ArcaneLogic.MonoGame.Input.Touch
 
             nextState = null;
             return false;
-        }
-
-        public override void Reset()
-        {
-            this.cooldown = 0;
         }
     }
 }
