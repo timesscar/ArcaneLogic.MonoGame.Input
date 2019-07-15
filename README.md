@@ -4,4 +4,17 @@ Input helpers for the MonoGame framework
 
 Includes a touch state machine that is reasonably performant and I think works better than the existing gesture engine.
 
-Please note that this is prerelease and is broken right now from the port.  I'll update the nuget to 1.0.0 when it is ready.
+0.8.3 is the first working prerelease version.  It has some unnecessary garbage collection and 1.0.0 should be more memory efficient.
+
+To use;
+
+var stateMachine = new TouchStateMachine();
+
+stateMachine.GestureStarted += YourMethod;
+
+public void YourMethod(object sender, TouchEventArgsBase e)
+{
+  // Handle the event hender
+}
+
+Then in your update loop call stateMachine.Update(gameTime);
