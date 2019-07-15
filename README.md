@@ -14,7 +14,7 @@ stateMachine.GestureStarted += YourMethod;
 
 public void YourMethod(object sender, TouchEventArgsBase e)
 {
-  // Handle the event hender
+  // Handle the event
 }
 
 Then in your update loop call stateMachine.Update(gameTime);
