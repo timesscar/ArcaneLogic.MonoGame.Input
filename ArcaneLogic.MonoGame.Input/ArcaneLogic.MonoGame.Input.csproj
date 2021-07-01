@@ -3,17 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.8.3</Version>
+    <Version>0.9.0</Version>
     <Description>Input helpers for the MonoGame framework</Description>
     <PackageLicenseExpression>MS-PL</PackageLicenseExpression>
     <PackageReleaseNotes>Initial release with a touch state machine</PackageReleaseNotes>
-    <AssemblyVersion>0.8.2.0</AssemblyVersion>
+    <AssemblyVersion>0.9.0</AssemblyVersion>
     <PackageProjectUrl>https://github.com/timesscar/ArcaneLogic.MonoGame.Input</PackageProjectUrl>
     <RepositoryUrl>https://github.com/timesscar/ArcaneLogic.MonoGame.Input</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
   </ItemGroup>
 
 </Project>
